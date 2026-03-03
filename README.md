@@ -1,6 +1,6 @@
 # MongoDB Learning Project
 
-This project is a small hands-on space for learning MongoDB fundamentals.
+This project is a small hands-on space for learning MongoDB fundamentals using Github education resources.
 
 ## What this covers
 - Connecting to MongoDB
