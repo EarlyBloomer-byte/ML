@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping List</title>
+</head>
+<body>
+    <h1>🛒 Shopping List</h1>
+
+    <form action="/add" method="POST">
+        <input type="text" name="name" placeholder="Item name" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+        <button type="submit">Add Item</button>
+    </form>
+
+    <hr>
+
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.name }} - {{ item.quantity }}
+                <a href="/delete/{{ item._id }}">❌</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
