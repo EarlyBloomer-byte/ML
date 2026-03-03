@@ -1,6 +1,11 @@
+import os
 from pymongo import MongoClient
 
-uri = "<>"
+uri = os.environ.get("MONGO_URI")
+
+if not uri:
+    raise ValueError("MONGO_URI environment variable not set")
+
 client = MongoClient(uri)
 
 try:
