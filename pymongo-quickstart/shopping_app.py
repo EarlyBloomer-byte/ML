@@ -1,6 +1,6 @@
 import os
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, UTC
 
 # Get MongoDB URI from environment variable
 uri = os.environ.get("MONGO_URI")
@@ -19,9 +19,9 @@ shopping_collection = db["shopping_list"]
 
 # Sample shopping items
 items = [
-    {"name": "Rice", "quantity": 2, "price": 3500, "added_at": datetime.utcnow()},
-    {"name": "Milk", "quantity": 5, "price": 1200, "added_at": datetime.utcnow()},
-    {"name": "Bread", "quantity": 3, "price": 800, "added_at": datetime.utcnow()},
+    {"name": "Rice", "quantity": 2, "price": 3500, "added_at": datetime.now(UTC)},
+    {"name": "Milk", "quantity": 5, "price": 1200, "added_at": datetime.now(UTC)},
+    {"name": "Bread", "quantity": 3, "price": 800, "added_at": datetime.now(UTC)},
 ]
 
 # Insert items into collection
