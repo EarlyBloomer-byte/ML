@@ -1,97 +1,203 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Shopping List</title>
+    <title>Shopping Board</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            color-scheme: light;
-            font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-0: #f2efe9;
+            --bg-1: #f7d88d;
+            --bg-2: #c7e7dc;
+            --panel: rgba(255, 255, 255, 0.8);
+            --text: #18302d;
+            --text-muted: #4f6b67;
+            --accent: #e2653d;
+            --accent-soft: #ffe0d5;
+            --secondary: #1f7a66;
+            --chip: #ecf8f3;
+            --danger: #b23b2a;
+            --danger-soft: #ffe5df;
+            --ok: #1f8659;
+            --line: rgba(24, 48, 45, 0.12);
         }
 
         body {
             margin: 0;
-            background: #f7f8fc;
-            color: #1f2937;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Outfit", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 0% 10%, var(--bg-1) 0%, transparent 45%),
+                radial-gradient(circle at 90% 70%, #f3b5a8 0%, transparent 40%),
+                radial-gradient(circle at 50% 100%, var(--bg-2) 0%, transparent 45%),
+                linear-gradient(130deg, #faf8f2 0%, #f0f5f1 45%, #fcf2e9 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(26px);
+            z-index: -1;
+            opacity: 0.48;
+            animation: floatBubble 8s ease-in-out infinite;
+        }
+
+        body::before {
+            top: -100px;
+            right: -80px;
+            background: #f39b73;
+        }
+
+        body::after {
+            bottom: -110px;
+            left: -90px;
+            background: #77b8a2;
+            animation-delay: 1.2s;
         }
 
         .container {
-            max-width: 760px;
-            margin: 3rem auto;
-            padding: 0 1rem;
+            max-width: 980px;
+            margin: 2.5rem auto 3rem;
+            padding: 0 1rem 1rem;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 14px;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-            border: 1px solid #e5e7eb;
+            background: var(--panel);
+            border-radius: 26px;
+            box-shadow: 0 25px 60px rgba(23, 46, 43, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(6px);
             overflow: hidden;
+            animation: riseIn 650ms ease-out;
         }
 
         .card-header {
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid #eef2f7;
-            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+            gap: 1rem;
+            padding: 1.3rem 1.4rem;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 252, 249, 0.72) 100%);
         }
 
         .header-icon {
-            width: 2.2rem;
-            height: 2.2rem;
-            border-radius: 10px;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 14px;
             display: grid;
             place-items: center;
-            background: #eef5ff;
-            color: #2b5db7;
-            font-size: 1.2rem;
+            background: #fff0e3;
+            color: #9b401f;
+            font-size: 1.25rem;
         }
 
         h1 {
             margin: 0;
-            font-size: 1.35rem;
+            font-size: 1.45rem;
+            font-family: "Space Grotesk", "Outfit", sans-serif;
+            letter-spacing: -0.02em;
         }
 
         .sub {
             margin: 0.2rem 0 0;
-            color: #64748b;
-            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 0.55rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-chip {
+            background: var(--chip);
+            color: var(--secondary);
+            border: 1px solid rgba(31, 122, 102, 0.2);
+            border-radius: 999px;
+            padding: 0.35rem 0.72rem;
+            font-size: 0.78rem;
+            font-weight: 700;
         }
 
         form {
             display: grid;
-            grid-template-columns: 1fr 160px auto;
+            grid-template-columns: minmax(160px, 1.6fr) minmax(80px, 0.7fr) minmax(120px, 0.9fr) minmax(130px, 1fr) auto;
             gap: 0.65rem;
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid #eef2f7;
+            padding: 1rem 1.35rem;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.15));
         }
 
         input, button {
-            border-radius: 10px;
-            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            border: 1px solid var(--line);
             padding: 0.62rem 0.75rem;
             font-size: 0.95rem;
+            font-family: "Outfit", "Segoe UI", sans-serif;
         }
 
         input:focus {
             outline: none;
-            border-color: #93c5fd;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            border-color: #85b6a7;
+            box-shadow: 0 0 0 3px rgba(129, 180, 161, 0.25);
         }
 
-        button {
+        .btn {
             border: none;
-            background: #2563eb;
+            background: var(--accent);
             color: #fff;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
+            transition: transform 0.2s ease, filter 0.2s ease;
         }
 
-        button:hover {
-            background: #1e4fd1;
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.96);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-danger {
+            background: var(--danger-soft);
+            color: var(--danger);
+            border: 1px solid rgba(178, 59, 42, 0.2);
+        }
+
+        .flash-wrap {
+            padding: 0.7rem 1.35rem 0;
+        }
+
+        .flash {
+            border-radius: 12px;
+            padding: 0.6rem 0.72rem;
+            font-size: 0.9rem;
+            margin: 0 0 0.65rem;
+        }
+
+        .flash.success {
+            background: #ebfbf2;
+            color: var(--ok);
+            border: 1px solid rgba(31, 134, 89, 0.22);
+        }
+
+        .flash.error {
+            background: #fff0ea;
+            color: #9d3322;
+            border: 1px solid rgba(157, 51, 34, 0.2);
         }
 
         ul {
@@ -102,54 +208,146 @@
 
         li {
             display: grid;
-            grid-template-columns: auto 1fr auto auto;
+            grid-template-columns: auto 1fr auto auto auto;
             align-items: center;
             gap: 0.6rem;
-            padding: 0.9rem 1.25rem;
-            border-top: 1px solid #f1f5f9;
+            padding: 0.9rem 1.35rem;
+            border-top: 1px solid var(--line);
+            animation: listIn 550ms ease both;
         }
 
         .item-marker {
             font-size: 1.05rem;
-            color: #334155;
+            color: #5b6f6a;
         }
 
         .item-name {
-            font-weight: 500;
-        }
-
-        .qty {
-            font-size: 0.83rem;
-            color: #1d4ed8;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 999px;
-            padding: 0.2rem 0.6rem;
             font-weight: 600;
         }
 
-        .delete {
-            text-decoration: none;
-            font-size: 0.9rem;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-            background: #fef2f2;
-            border-radius: 8px;
-            padding: 0.28rem 0.5rem;
+        .item-name.purchased {
+            text-decoration: line-through;
+            color: #7a8b86;
         }
 
-        .delete:hover {
-            background: #fee2e2;
+        .qty {
+            font-size: 0.78rem;
+            color: #115c4f;
+            background: #e7f8f2;
+            border: 1px solid rgba(17, 92, 79, 0.24);
+            border-radius: 999px;
+            padding: 0.26rem 0.65rem;
+            font-weight: 700;
+        }
+
+        .meta {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-chip {
+            font-size: 0.73rem;
+            color: #3e5652;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(62, 86, 82, 0.24);
+            border-radius: 999px;
+            padding: 0.25rem 0.5rem;
+            white-space: nowrap;
+        }
+
+        .inline-form {
+            margin: 0;
+            padding: 0;
+            display: inline;
+            border: 0;
+            background: transparent;
+        }
+
+        .inline-form .btn {
+            padding: 0.42rem 0.65rem;
+            font-size: 0.8rem;
+            border-radius: 9px;
         }
 
         .empty {
-            padding: 1rem 1.25rem 1.15rem;
-            color: #64748b;
+            padding: 1.05rem 1.35rem 1.2rem;
+            color: var(--text-muted);
         }
 
-        @media (max-width: 640px) {
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes listIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes floatBubble {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-16px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            form {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            form .btn {
+                grid-column: span 2;
+            }
+
+            .card-header {
+                grid-template-columns: auto 1fr;
+            }
+
+            .stats {
+                grid-column: span 2;
+            }
+
+            li {
+                grid-template-columns: auto 1fr;
+                align-items: start;
+            }
+
+            .qty,
+            .meta,
+            .inline-form {
+                grid-column: 2;
+            }
+
+            .inline-form {
+                display: inline-flex;
+                margin-right: 0.4rem;
+            }
+        }
+
+        @media (max-width: 520px) {
             form {
                 grid-template-columns: 1fr;
+            }
+
+            form .btn {
+                grid-column: auto;
             }
         }
     </style>
@@ -160,30 +358,60 @@
             <header class="card-header">
                 <div class="header-icon">🧺</div>
                 <div>
-                    <h1>Shopping List</h1>
-                    <p class="sub">Track groceries with cleaner symbols and clearer rows</p>
+                    <h1>Vibrant Shopping Board</h1>
+                    <p class="sub">Interactive planning for groceries, prices, and quick completion tracking.</p>
+                </div>
+                <div class="stats">
+                    <span class="stat-chip">Items: {{ total_items }}</span>
+                    <span class="stat-chip">Units: {{ total_quantity }}</span>
+                    <span class="stat-chip">Est. Cost: {{ '%.2f'|format(estimated_total) }}</span>
                 </div>
             </header>
 
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                <div class="flash-wrap">
+                    {% for category, message in messages %}
+                        <p class="flash {{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+
             <form action="/add" method="POST">
-                <input type="text" name="name" placeholder="Item name (e.g., Milk)" required>
+                <input type="text" name="name" placeholder="Item name (e.g., Milk)" maxlength="80" required>
                 <input type="number" name="quantity" placeholder="Qty" min="1" required>
-                <button type="submit">＋ Add</button>
+                <input type="number" name="price" placeholder="Price / unit" min="0" step="0.01">
+                <input type="text" name="category" placeholder="Category (e.g., Dairy)" maxlength="40">
+                <button class="btn" type="submit">Add Item</button>
             </form>
 
             {% if items %}
             <ul>
                 {% for item in items %}
                     <li>
-                        <span class="item-marker">•</span>
-                        <span class="item-name">{{ item.name }}</span>
+                        <span class="item-marker">{{ '✅' if item.purchased else '•' }}</span>
+                        <span class="item-name {{ 'purchased' if item.purchased else '' }}">{{ item.name }}</span>
                         <span class="qty">× {{ item.quantity }}</span>
-                        <a class="delete" href="/delete/{{ item._id }}" title="Remove item">🗑 Remove</a>
+                        <div class="meta">
+                            <span class="meta-chip">{{ item.get('category', 'General') }}</span>
+                            <span class="meta-chip">$ {{ '%.2f'|format(item.get('price', 0.0)|float) }} each</span>
+                        </div>
+                        <div>
+                            <form class="inline-form" action="/toggle/{{ item._id }}" method="POST">
+                                <button class="btn btn-secondary" type="submit">
+                                    {{ 'Undo' if item.get('purchased') else 'Done' }}
+                                </button>
+                            </form>
+                            <form class="inline-form" action="/delete/{{ item._id }}" method="POST">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                            </form>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
             {% else %}
-            <p class="empty">📝 No items yet. Add your first product above.</p>
+            <p class="empty">No items yet. Add your first product and start tracking your basket.</p>
             {% endif %}
         </section>
     </main>
