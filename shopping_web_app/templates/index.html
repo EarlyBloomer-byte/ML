@@ -2,26 +2,191 @@
 <html>
 <head>
     <title>Shopping List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f7f8fc;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #eef2f7;
+            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        }
+
+        .header-icon {
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            background: #eef5ff;
+            color: #2b5db7;
+            font-size: 1.2rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.35rem;
+        }
+
+        .sub {
+            margin: 0.2rem 0 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 160px auto;
+            gap: 0.65rem;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        input, button {
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            padding: 0.62rem 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        button {
+            border: none;
+            background: #2563eb;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #1e4fd1;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.9rem 1.25rem;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .item-marker {
+            font-size: 1.05rem;
+            color: #334155;
+        }
+
+        .item-name {
+            font-weight: 500;
+        }
+
+        .qty {
+            font-size: 0.83rem;
+            color: #1d4ed8;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            padding: 0.2rem 0.6rem;
+            font-weight: 600;
+        }
+
+        .delete {
+            text-decoration: none;
+            font-size: 0.9rem;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            border-radius: 8px;
+            padding: 0.28rem 0.5rem;
+        }
+
+        .delete:hover {
+            background: #fee2e2;
+        }
+
+        .empty {
+            padding: 1rem 1.25rem 1.15rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 640px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>🛒 Shopping List</h1>
+    <main class="container">
+        <section class="card">
+            <header class="card-header">
+                <div class="header-icon">🧺</div>
+                <div>
+                    <h1>Shopping List</h1>
+                    <p class="sub">Track groceries with cleaner symbols and clearer rows</p>
+                </div>
+            </header>
 
-    <form action="/add" method="POST">
-        <input type="text" name="name" placeholder="Item name" required>
-        <input type="number" name="quantity" placeholder="Quantity" required>
-        <button type="submit">Add Item</button>
-    </form>
+            <form action="/add" method="POST">
+                <input type="text" name="name" placeholder="Item name (e.g., Milk)" required>
+                <input type="number" name="quantity" placeholder="Qty" min="1" required>
+                <button type="submit">＋ Add</button>
+            </form>
 
-    <hr>
-
-    <ul>
-        {% for item in items %}
-            <li>
-                {{ item.name }} - {{ item.quantity }}
-                <a href="/delete/{{ item._id }}">❌</a>
-            </li>
-        {% endfor %}
-    </ul>
+            {% if items %}
+            <ul>
+                {% for item in items %}
+                    <li>
+                        <span class="item-marker">•</span>
+                        <span class="item-name">{{ item.name }}</span>
+                        <span class="qty">× {{ item.quantity }}</span>
+                        <a class="delete" href="/delete/{{ item._id }}" title="Remove item">🗑 Remove</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="empty">📝 No items yet. Add your first product above.</p>
+            {% endif %}
+        </section>
+    </main>
 
 </body>
 </html>
